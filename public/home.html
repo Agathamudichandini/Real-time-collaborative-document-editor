@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Real-Time Chat</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; background: #f4f4f4; }
+    #messages { list-style: none; padding: 0; max-width: 400px; margin: 20px auto; }
+    #messages li { background: #fff; margin: 5px; padding: 10px; border-radius: 5px; }
+    #chat { display: flex; justify-content: center; margin-top: 20px; }
+    #message { padding: 10px; width: 250px; }
+    #send { padding: 10px; }
+  </style>
+</head>
+<body>
+  <h2>💬 Real-Time Chat Application</h2>
+  <ul id="messages"></ul>
+  <div id="chat">
+    <input id="message" placeholder="Type a message..." autocomplete="off"/>
+    <button id="send">Send</button>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+    const messageInput = document.getElementById('message');
+    const messagesList = document.getElementById('messages');
+    const sendButton = document.getElementById('send');
+
+    sendButton.addEventListener('click', () => {
+      const msg = messageInput.value;
+      if(msg.trim()) {
+        socket.emit('chatMessage', msg);
+        messageInput.value = '';
+      }
+    });
+
+    socket.on('chatMessage', (msg) => {
+      const li = document.createElement('li');
+      li.textContent = msg;
+      messagesList.appendChild(li);
+    });
+  </script>
+</body>
+</html>
